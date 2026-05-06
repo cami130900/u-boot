@@ -3,7 +3,6 @@ name: "CodeQL Custom Taint Analysis"
 on:
   push:
     branches: [ "master", "main" ]
-
 jobs:
   analyze:
     name: Analyze U-Boot
