@@ -7,7 +7,6 @@ on:
 jobs:
   analyze:
     name: Analyze U-Boot
-    # Usiamo la 22.04: è molto più facile da trovare per GitHub rispetto alla 20.04
     runs-on: ubuntu-22.04
     permissions:
       security-events: write
@@ -19,7 +18,8 @@ jobs:
     - name: Install dependencies
       run: |
         sudo apt-get update
-        sudo apt-get install -y bc bison build-essential flex libssl-dev make
+        # Abbiamo aggiunto libsdl2-dev alla lista
+        sudo apt-get install -y bc bison build-essential flex libssl-dev make libsdl2-dev
 
     - name: Initialize CodeQL
       uses: github/codeql-action/init@v3
@@ -28,11 +28,10 @@ jobs:
         queries: ./.github/custom-queries/11_taint_with_barrier.ql
 
     - name: Build U-Boot (Sandbox)
-      # Aggiungiamo 'KCFLAGS=-w' per ignorare tutti i warning del compilatore moderno 
-      # che bloccherebbero il codice vecchio del 2019
       run: |
         make sandbox_defconfig
-        make KCFLAGS="-w" -j$(nproc)
+        # Abbiamo aggiunto -fcommon per risolvere il problema 'multiple definition'
+        make KCFLAGS="-w -fcommon" -j$(nproc)
 
     - name: Perform CodeQL Analysis
       uses: github/codeql-action/analyze@v3
