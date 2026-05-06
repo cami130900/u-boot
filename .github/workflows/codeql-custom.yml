@@ -1,6 +1,5 @@
 name: "CodeQL Custom Taint Analysis"
 
-# Quando deve partire questa analisi? Ogni volta che facciamo un "push"
 on:
   push:
     branches: [ "master", "main" ]
@@ -14,27 +13,23 @@ jobs:
 
     steps:
     - name: Checkout repository
-      uses: actions/checkout@v3
+      uses: actions/checkout@v4 
 
-    # Installiamo i pacchetti essenziali per compilare programmi in C
     - name: Install dependencies
       run: |
         sudo apt-get update
         sudo apt-get install -y bc bison build-essential flex libssl-dev make
 
-    # Avviamo CodeQL e gli diciamo di usare la tua query personalizzata
     - name: Initialize CodeQL
-      uses: github/codeql-action/init@v2
+      uses: github/codeql-action/init@v3
       with:
         languages: c-cpp
         queries: ./.github/custom-queries/11_taint_with_barrier.ql
 
-    # Compiliamo una versione leggera di U-Boot (Sandbox)
     - name: Build U-Boot (Sandbox)
       run: |
         make sandbox_defconfig
         make -j$(nproc)
 
-    # Analisi finale e salvataggio dei risultati
     - name: Perform CodeQL Analysis
-      uses: github/codeql-action/analyze@v2
+      uses: github/codeql-action/analyze@v3
