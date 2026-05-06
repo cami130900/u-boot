@@ -7,13 +7,13 @@ on:
 jobs:
   analyze:
     name: Analyze U-Boot
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-20.04
     permissions:
       security-events: write
 
     steps:
     - name: Checkout repository
-      uses: actions/checkout@v4 
+      uses: actions/checkout@v4
 
     - name: Install dependencies
       run: |
