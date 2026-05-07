@@ -27,12 +27,15 @@ jobs:
         languages: c-cpp
         queries: ./.github/custom-queries/11_taint_with_barrier.ql
 
-    - name: Build U-Boot (Sandbox)
+     - name: Build U-Boot (Sandbox)
       run: |
         make sandbox_defconfig
-        # Comando fondamentale per attivare il codice vulnerabile
-        ./scripts/config --enable CONFIG_CMD_NFS
-        ./scripts/config --enable CONFIG_NFS_COMMON
+         # Scriviamo manualmente le opzioni nel file .config
+        echo "CONFIG_CMD_NFS=y" >> .config
+        echo "CONFIG_NFS_COMMON=y" >> .config
+        # Diciamo a 'make' di aggiornare la configurazione con le nostre aggiunte
+        make olddefconfig
+        # Compiliamo
         make HOSTCFLAGS="-fcommon" KCFLAGS="-w -fcommon" -j$(nproc)
 
     - name: Perform CodeQL Analysis
