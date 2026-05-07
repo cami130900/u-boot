@@ -32,14 +32,6 @@ module MyConfig implements DataFlow::ConfigSig {
       sink.asExpr() = call.getArgument(2)
     )
   }
-
-  /* // COMMENTATO TEMPORANEAMENTE PER TEST
-  // Questa barriera blocca qualsiasi cosa sia dentro un IF. 
-  // La riattiveremo dopo aver verificato che gli alert compaiano.
-  predicate isBarrier(DataFlow::Node node) {
-    node.asExpr().getEnclosingStmt() instanceof IfStmt
-  }
-  */
 }
 
 module MyTaint = TaintTracking::Global<MyConfig>;
@@ -47,4 +39,5 @@ import MyTaint::PathGraph
 
 from MyTaint::PathNode source, MyTaint::PathNode sink
 where MyTaint::flowPath(source, sink)
-select sink.getNode(), source, sink, "Dati di rete non validati raggiungono memcpy.", source, "Rilevata potenziale vulnerabilità (source)"
+// Modifica cruciale: esattamente 4 elementi nel select
+select sink.getNode(), source, sink, "Dati di rete non validati raggiungono memcpy."
