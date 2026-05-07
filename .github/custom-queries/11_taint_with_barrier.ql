@@ -9,7 +9,6 @@
 
 import cpp
 import semmle.code.cpp.dataflow.TaintTracking
-import DataFlow::PathGraph
 
 class NetworkByteSwap extends Expr {
   NetworkByteSwap() {
@@ -39,5 +38,4 @@ import MyTaint::PathGraph
 
 from MyTaint::PathNode source, MyTaint::PathNode sink
 where MyTaint::flowPath(source, sink)
-// Modifica cruciale: esattamente 4 elementi nel select
 select sink.getNode(), source, sink, "Dati di rete non validati raggiungono memcpy."
