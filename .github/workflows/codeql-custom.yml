@@ -24,6 +24,7 @@ jobs:
       uses: github/codeql-action/init@v3
       with:
         languages: c-cpp
+        disable-default-queries: true
         queries: ./.github/custom-queries/11_taint_with_barrier.ql
 
     - name: Build U-Boot (Sandbox)
