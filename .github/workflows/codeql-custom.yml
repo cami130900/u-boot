@@ -30,7 +30,9 @@ jobs:
     - name: Build U-Boot (Sandbox)
       run: |
         make sandbox_defconfig
-        # Usiamo -fcommon sia per il codice principale che per gli strumenti (HOSTCFLAGS)
+        # Comando fondamentale per attivare il codice vulnerabile
+        ./scripts/config --enable CONFIG_CMD_NFS
+        ./scripts/config --enable CONFIG_NFS_COMMON
         make HOSTCFLAGS="-fcommon" KCFLAGS="-w -fcommon" -j$(nproc)
 
     - name: Perform CodeQL Analysis
